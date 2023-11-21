@@ -54,9 +54,10 @@ module axis_video_overlay #
     
 );
    
+   reg synced = 0;
    
-   wire path_active = s_axis_tvalid_vid0 & s_axis_tvalid_vid1 & m_axis_tready;
-   reg active_frame = 0;
+//   wire path_active = s_axis_tvalid_vid0 & s_axis_tvalid_vid1 & m_axis_tready;
+//   reg active_frame = 0;
    
    wire [7:0] pixel_R;
    wire [7:0] pixel_G;
@@ -66,50 +67,74 @@ module axis_video_overlay #
    assign pixel_B = (s_axis_tdata_vid0[15:8]  + s_axis_tdata_vid1[15:8] ) / 2;
    assign pixel_G = (s_axis_tdata_vid0[7:0]   + s_axis_tdata_vid1[7:0]  ) / 2; 
    
+   
     always @ (posedge axis_clk) begin
-        active_frame <= ((s_axis_tuser_vid0 & s_axis_tuser_vid1) | (aresetn & active_frame));
+        synced <= ((s_axis_tuser_vid0 & s_axis_tuser_vid1) | (aresetn & synced));
     end    
    
    
-   always @ (axis_clk) begin
-       if (active_frame) begin
-           s_axis_tready_vid0 = m_axis_tready & s_axis_tvalid_vid1 ;
-           s_axis_tready_vid1 = m_axis_tready & s_axis_tvalid_vid0;
+    always @ (axis_clk) begin
+    
+        if (synced | (s_axis_tuser_vid0 & s_axis_tuser_vid1)) begin
+            s_axis_tready_vid0 = m_axis_tready & s_axis_tvalid_vid1;
+            s_axis_tready_vid1 = m_axis_tready & s_axis_tvalid_vid0;
+            
+            m_axis_tvalid = s_axis_tvalid_vid0 & s_axis_tvalid_vid1;
+            
+            m_axis_tdata[23:16] = pixel_R;
+            m_axis_tdata[15:8]  = pixel_B;
+            m_axis_tdata[7:0]   = pixel_G;
+            m_axis_tlast = s_axis_tlast_vid0 & s_axis_tlast_vid1;
+            m_axis_tuser = s_axis_tuser_vid0 & s_axis_tuser_vid1;
+
+        end
+        else begin
+            s_axis_tready_vid0 = ~s_axis_tuser_vid0 + s_axis_tuser_vid1;
+            s_axis_tready_vid1 = ~s_axis_tuser_vid1 + s_axis_tuser_vid0;
+            m_axis_tvalid = 0;
+        end
+        
+    end
+   
+//   always @ (axis_clk) begin
+//       if (active_frame) begin
+//           s_axis_tready_vid0 = m_axis_tready & s_axis_tvalid_vid1 ;
+//           s_axis_tready_vid1 = m_axis_tready & s_axis_tvalid_vid0;
            
-           if(s_axis_tvalid_vid0 & s_axis_tvalid_vid1 == 1)
-               m_axis_tvalid = 1;
-           else
-               m_axis_tvalid = 0;
+//           if(s_axis_tvalid_vid0 & s_axis_tvalid_vid1 == 1)
+//               m_axis_tvalid = 1;
+//           else
+//               m_axis_tvalid = 0;
                          
-           if(path_active) begin
-               m_axis_tdata[23:16] = pixel_R;
-               m_axis_tdata[15:8]  = pixel_B;
-               m_axis_tdata[7:0]   = pixel_G;
+//           if(path_active) begin
+//               m_axis_tdata[23:16] = pixel_R;
+//               m_axis_tdata[15:8]  = pixel_B;
+//               m_axis_tdata[7:0]   = pixel_G;
            
-               m_axis_tlast = s_axis_tlast_vid0 & s_axis_tlast_vid1;
-               m_axis_tuser = s_axis_tuser_vid0 & s_axis_tlast_vid1;
-           end    
+//               m_axis_tlast = s_axis_tlast_vid0 & s_axis_tlast_vid1;
+//               m_axis_tuser = s_axis_tuser_vid0 & s_axis_tlast_vid1;
+//           end    
            
-       end
-       else begin
-           m_axis_tvalid = 0;
-           if (s_axis_tuser_vid0 & s_axis_tuser_vid1 == 0) begin
-               s_axis_tready_vid0 = 1;
-               s_axis_tready_vid1 = 1;
-           end
-           else if (s_axis_tuser_vid0 == 1) begin
-               s_axis_tready_vid0 = 0;
-               s_axis_tready_vid1 = 1;
-           end
-           else begin
-               s_axis_tready_vid0 = 1;
-               s_axis_tready_vid1 = 0;
-           end
-       end
+//       end
+//       else begin
+//           m_axis_tvalid = 0;
+//           if (s_axis_tuser_vid0 & s_axis_tuser_vid1 == 0) begin
+//               s_axis_tready_vid0 = 1;
+//               s_axis_tready_vid1 = 1;
+//           end
+//           else if (s_axis_tuser_vid0 == 1) begin
+//               s_axis_tready_vid0 = 0;
+//               s_axis_tready_vid1 = 1;
+//           end
+//           else begin
+//               s_axis_tready_vid0 = 1;
+//               s_axis_tready_vid1 = 0;
+//           end
+//       end
 
    
 
 
-   end
+//   end
     
 endmodule

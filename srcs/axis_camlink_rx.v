@@ -204,12 +204,8 @@ module cam_in_axi4s #
     assign cm_port_a = fifo_out[7:0];
     assign cm_port_b = fifo_out[15:8];
     assign cm_port_c = fifo_out[23:16];
-    
-//    assign m_axis_tdata[23:0] = obuf_tdata[23:0];
-//    assign m_axis_tvalid      = obuf_tvalid;
-//    assign m_axis_tlast       = obuf_tlast;
-//    assign m_axis_tuser       = obuf_tuser;
-
+   
+   
     assign m_axis_tvalid       = ~axis_wait_newframe & fifo_out[24] & ~fifo_empty;
     assign m_axis_tlast        = fifo_out[25];  
     assign m_axis_tuser        = fifo_out[26];
