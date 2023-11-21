@@ -1,1 +1,1 @@
-# camlink_rx_dma_livedp
+# Camera Link RX Subsystem & DMA Live Video Stitching
