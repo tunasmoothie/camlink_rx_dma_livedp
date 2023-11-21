@@ -8,3 +8,6 @@
   + XCZU9EG-2FFVB1156
 + E-Elements EES-237
   + DS90CR288 28b Decoder FMC Connector(M)
+  
+## Getting Started
+Run ```build_project.sh``` to create a workable Vivado project directory
