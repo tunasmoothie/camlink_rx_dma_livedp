@@ -96,45 +96,5 @@ module axis_video_overlay #
         
     end
    
-//   always @ (axis_clk) begin
-//       if (active_frame) begin
-//           s_axis_tready_vid0 = m_axis_tready & s_axis_tvalid_vid1 ;
-//           s_axis_tready_vid1 = m_axis_tready & s_axis_tvalid_vid0;
-           
-//           if(s_axis_tvalid_vid0 & s_axis_tvalid_vid1 == 1)
-//               m_axis_tvalid = 1;
-//           else
-//               m_axis_tvalid = 0;
-                         
-//           if(path_active) begin
-//               m_axis_tdata[23:16] = pixel_R;
-//               m_axis_tdata[15:8]  = pixel_B;
-//               m_axis_tdata[7:0]   = pixel_G;
-           
-//               m_axis_tlast = s_axis_tlast_vid0 & s_axis_tlast_vid1;
-//               m_axis_tuser = s_axis_tuser_vid0 & s_axis_tlast_vid1;
-//           end    
-           
-//       end
-//       else begin
-//           m_axis_tvalid = 0;
-//           if (s_axis_tuser_vid0 & s_axis_tuser_vid1 == 0) begin
-//               s_axis_tready_vid0 = 1;
-//               s_axis_tready_vid1 = 1;
-//           end
-//           else if (s_axis_tuser_vid0 == 1) begin
-//               s_axis_tready_vid0 = 0;
-//               s_axis_tready_vid1 = 1;
-//           end
-//           else begin
-//               s_axis_tready_vid0 = 1;
-//               s_axis_tready_vid1 = 0;
-//           end
-//       end
-
-   
-
-
-//   end
     
 endmodule

@@ -1,4 +1,4 @@
-module cam_in_axi4s #
+module axis_camlink_rx #
 (
     parameter DATA_WIDTH = 24
 )
@@ -33,10 +33,12 @@ module cam_in_axi4s #
     
    
     // Reset variables
-    reg         rst;
-    reg         rst_busy_camclk = 1;
-    reg         rst_busy_aclk = 1;
-    reg         axis_wait_newframe = 1;
+    wire       rst = ~aresetn;
+    wire       rst_camclk;
+    
+    reg        rst_busy_camclk = 1;
+    reg        rst_busy_aclk = 1;
+    reg        axis_wait_newframe = 1;
     
 
   
@@ -159,7 +161,7 @@ module cam_in_axi4s #
        .WRITE_WIDTH(72)                  // 18-9
     )
     FIFO36E2_inst (
-       .RST(rst),                     // 1-bit input: Reset
+       .RST(rst_camclk),              // 1-bit input: Reset
         // Status outputs: Flags and other FIFO status outputs
        .EMPTY(fifo_empty),            // 1-bit output: Empty
        .FULL(fifo_full),              // 1-bit output: Full
@@ -170,7 +172,7 @@ module cam_in_axi4s #
        .WRERR(WRERR),                 // 1-bit output: Write Error
         
        // Read Control Signals inputs: Read clock, enable and reset input signals
-       .RDCLK(aclk),                  // 1-bit input: Read clock
+       .RDCLK(axis_clk),                  // 1-bit input: Read clock
        .RDEN(fifo_rden),              // 1-bit input: Read enable
        // Read Data outputs: Read output data
        .DOUT(fifo_out),               // 64-bit output: FIFO data output bus
@@ -184,7 +186,6 @@ module cam_in_axi4s #
      
      
 
-    
     // ================================================
     // AXIS Preperation
     // ================================================
@@ -199,13 +200,12 @@ module cam_in_axi4s #
     wire [7:0]            cm_port_c;
     
     
-    assign aclk = axis_clk & m_axis_tready;
+    //assign aclk = axis_clk & m_axis_tready;
     
     assign cm_port_a = fifo_out[7:0];
     assign cm_port_b = fifo_out[15:8];
     assign cm_port_c = fifo_out[23:16];
-   
-   
+    
     assign m_axis_tvalid       = ~axis_wait_newframe & fifo_out[24] & ~fifo_empty;
     assign m_axis_tlast        = fifo_out[25];  
     assign m_axis_tuser        = fifo_out[26];
@@ -215,19 +215,29 @@ module cam_in_axi4s #
     assign m_axis_tdata[7:0]   = cm_port_a;
     
     
-    
     // ================================================
     // Reset subprocess
     // ================================================
-    always @ (posedge aclk) begin
-        rst <= ~aresetn;
+    
+    always @ (posedge axis_clk) begin
         rst_busy_aclk <= rst | (~(~fifo_rdrstbusy) & rst_busy_aclk);
         axis_wait_newframe <= rst | (~(m_axis_tuser) & axis_wait_newframe);
     end
     
+    // FFs for CDC
+    (* ASYNC_REG = "TRUE" *) reg [2:0] camclk_rst_pipe;
+    assign rst_camclk = camclk_rst_pipe[0];
+    
+    always @ (posedge axis_clk) begin
+        camclk_rst_pipe[2] <= rst;
+    end
+    
     always @ (posedge cam_clk) begin
-        rst_busy_camclk <= rst | (~(~fifo_wrrstbusy) & rst_busy_camclk);
-    end        
+        camclk_rst_pipe[1:0] <= {camclk_rst_pipe[2:1]};
+        rst_busy_camclk <= rst_camclk | (~(~fifo_wrrstbusy) & rst_busy_camclk);
+    end    
+    
+        
     
 endmodule
 
