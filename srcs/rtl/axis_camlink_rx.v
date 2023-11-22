@@ -13,13 +13,23 @@ module axis_camlink_rx #
     /*
      * AXIS output
      */
+    (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME axis_clk, ASSOCIATED_BUSIF M_AXIS"  *)
+    (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 axis_clk CLK" *)
     input  wire                   axis_clk,
     
+    (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME aresetn, POLARITY ACTIVE_LOW" *)
+    (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 aresetn RST" *)   
     input  wire                   aresetn,
+    
+    (* X_INTERFACE_INFO = "xilinx.com:interface:axis_rtl:1.0 M_AXIS TDATA"   *)
     output wire [DATA_WIDTH-1:0]  m_axis_tdata,
+    (* X_INTERFACE_INFO = "xilinx.com:interface:axis_rtl:1.0 M_AXIS TVALID"  *)
     output wire                   m_axis_tvalid,
+    (* X_INTERFACE_INFO = "xilinx.com:interface:axis_rtl:1.0 M_AXIS TREADY"  *)
     input  wire                   m_axis_tready,
+    (* X_INTERFACE_INFO = "xilinx.com:interface:axis_rtl:1.0 M_AXIS TLAST"   *)
     output wire                   m_axis_tlast,
+    (* X_INTERFACE_INFO = "xilinx.com:interface:axis_rtl:1.0 M_AXIS TUSER"   *)
     output wire                   m_axis_tuser,
     
     /*
