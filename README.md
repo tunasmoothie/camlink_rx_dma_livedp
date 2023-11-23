@@ -1,5 +1,6 @@
 # Camera Link RX Subsystem & DMA Live Video Stitching
 
+
 ## Environment & Setup
 + Vitis Unified Software Platform 2022.2
   + Vivado 2022.2
@@ -9,6 +10,10 @@
 + E-Elements EES-237
   + DS90CR288 28b Decoder FMC Connector(M)
   
+  
 ## Getting Started
-Run ```build_prj.sh``` to create a workable Vivado project directory.
-Run ```clean_prj.sh``` to clean project and delete all generated files.
+Run ```create_prj.sh``` to create a workable Vivado project directory.  
+Run ```clean_prj.sh``` to clean project and delete all generated files.  
+
+Prebuilt bitstreams and programs exists under ```prebuilt``` folder.
+
