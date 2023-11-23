@@ -10,4 +10,5 @@
   + DS90CR288 28b Decoder FMC Connector(M)
   
 ## Getting Started
-Run ```build_project.sh``` to create a workable Vivado project directory
+Run ```build_prj.sh``` to create a workable Vivado project directory.
+Run ```clean_prj.sh``` to clean project and delete all generated files.
