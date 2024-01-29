@@ -200,19 +200,19 @@ int main()
     XV_tpg_Set_height(&tpg1, 480);
 
 
-	XV_tpg_Set_colorFormat(&tpg0, 0x00);
-	XV_tpg_InterruptGlobalDisable(&tpg0);
-	XV_tpg_Start(&tpg0);
+    XV_tpg_Set_colorFormat(&tpg0, 0x00);
+    XV_tpg_InterruptGlobalDisable(&tpg0);
+    XV_tpg_Start(&tpg0);
     XV_tpg_EnableAutoRestart(&tpg0);
     XV_tpg_Set_bckgndId(&tpg0, XTPG_BKGND_TARTAN_COLOR_BARS);
 
 
 
 
-	XV_tpg_Set_colorFormat(&tpg1, 0x00);
-	XV_tpg_InterruptGlobalDisable(&tpg1);
-	XV_tpg_Start(&tpg1);
-	XV_tpg_EnableAutoRestart(&tpg1);
+    XV_tpg_Set_colorFormat(&tpg1, 0x00);
+    XV_tpg_InterruptGlobalDisable(&tpg1);
+    XV_tpg_Start(&tpg1);
+    XV_tpg_EnableAutoRestart(&tpg1);
     XV_tpg_Set_bckgndId(&tpg1, XTPG_BKGND_TARTAN_COLOR_BARS);
 
     print("                                  Done\n\r");
