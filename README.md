@@ -15,5 +15,5 @@
 Run ```create_prj.sh``` to create a workable Vivado project directory.  
 Run ```clean_prj.sh``` to clean project and delete all generated files.  
 
-Prebuilt bitstreams and programs exists under ```prebuilt``` folder.
+Prebuilt bitstreams and programs exist under ```prebuilt``` folder.
 
