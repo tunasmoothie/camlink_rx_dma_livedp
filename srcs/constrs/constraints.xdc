@@ -1,36 +1,18 @@
-# Bitstream Compression
 set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
 
-
-############################################################
-# CLOCK RELATED CONSTRAINTS
-############################################################
-
-# -- 54 MHz clock from FMC HPC0 --
-create_clock -period 18.520 -name cam_clk_0 -waveform {0.000 9.260} [get_ports cam_clk_0]
+#54 MHz
 set_property PACKAGE_PIN R8 [get_ports cam_clk_0]
 set_property IOSTANDARD LVCMOS18 [get_ports cam_clk_0]
 
-# -- 10 MHz clock from FMC HPC1 --
-create_clock -period 100.000 -name cam_clk_1 -waveform {0.000 50.000} [get_ports cam_clk_1]
+create_clock -period 18.520 -name cam_clk_0 -waveform {0.000 9.260} [get_ports cam_clk_0]
+
+#21.04 MHz
 set_property PACKAGE_PIN P9 [get_ports cam_clk_1]
 set_property IOSTANDARD LVCMOS18 [get_ports cam_clk_1]
 
+create_clock -period 47.528 -name cam_clk_1 -waveform {0.000 23.753} [get_ports cam_clk_1]
 
-set_clock_groups -asynchronous -group [get_clocks clk_100M_top_clk_wiz_1_0] -group [get_clocks cam_clk_0] -group [get_clocks cam_clk_1]
-set_false_path -from [get_clocks clk_100M_top_clk_wiz_1_0] to [get_clocks cam_clk_0]
-
-
-############################################################
-# PIN RELATED CONSTRAINTS
-############################################################
-
-# Clock Pins
-set_property PACKAGE_PIN R8 [get_ports cam_clk_0]
-set_property PACKAGE_PIN P9 [get_ports cam_clk_1]
-
-
-# HPC0 Data Pins
+# HPC0 Pins
 set_property PACKAGE_PIN L16 [get_ports {cmlink_base_0[27]}]
 set_property PACKAGE_PIN K16 [get_ports {cmlink_base_0[26]}]
 set_property PACKAGE_PIN L15 [get_ports {cmlink_base_0[25]}]
@@ -61,8 +43,7 @@ set_property PACKAGE_PIN U11 [get_ports {cmlink_base_0[1]}]
 set_property PACKAGE_PIN T11 [get_ports {cmlink_base_0[0]}]
 
 
-# HPC1 Data Pins
-# Due to incomplete FMC pinning, some ports are undefined
+# HPC1 Pins
 set_property PACKAGE_PIN AE12 [get_ports {cam_data_in_1_0[27]}]
 set_property PACKAGE_PIN AF12 [get_ports {cam_data_in_1_0[26]}]
 set_property PACKAGE_PIN T12 [get_ports {cam_data_in_1_0[25]}]
@@ -92,9 +73,6 @@ set_property PACKAGE_PIN R13 [get_ports {cam_data_in_1_1[4]}]
 #set_property PACKAGE_PIN U11 [get_ports {cam_data_in_1[1]}]
 #set_property PACKAGE_PIN T11 [get_ports {cam_data_in_1[0]}]
 
-
-set_property IOSTANDARD LVCMOS18 [get_ports cam_clk_0]
-set_property IOSTANDARD LVCMOS18 [get_ports cam_clk_1]
 
 set_property IOSTANDARD LVCMOS18 [get_ports {cmlink_base_0[27]}]
 set_property IOSTANDARD LVCMOS18 [get_ports {cmlink_base_0[26]}]
@@ -155,12 +133,4 @@ set_property IOSTANDARD LVCMOS18 [get_ports {cam_data_in_1_1[4]}]
 #set_property IOSTANDARD LVCMOS18 [get_ports {cam_data_in_0[0]}]
 
 
-############################################################
-# DEBUG/ILA RELATED CONSTRAINTS
-############################################################
-
-set_property C_CLK_INPUT_FREQ_HZ 300000000 [get_debug_cores dbg_hub]
-set_property C_ENABLE_CLK_DIVIDER false [get_debug_cores dbg_hub]
-set_property C_USER_SCAN_CHAIN 1 [get_debug_cores dbg_hub]
-connect_debug_port dbg_hub/clk [get_nets clk]
-
+set_max_delay -from [get_pins top_i/axi_vdma_1/U0/GEN_SPRT_FOR_S2MM.GEN_S2MM_DRE_ON_SKID.I_S2MM_SKID_FLUSH_SOF/sig_s_ready_out_reg/C] -to [get_pins top_i/cam_in_axi4s_1/inst/FIFO36E2_inst/RDEN] 0.510
